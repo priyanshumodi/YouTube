@@ -40,7 +40,7 @@ const Login = () => {
             })
             return handleSuccess("successfully Login")
         } catch (error) {
-            return handleError('API Error',error)
+            return handleError("invalid user or password",error)
         }
 
     }
