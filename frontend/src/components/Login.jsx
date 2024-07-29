@@ -26,13 +26,9 @@ const Login = () => {
         if(!email.trim() || !password.trim()) {
             return handleError("email or password are required")
         }
-        const postData = {
-            email:email,
-            password: password
-          };
-        console.log(postData)
+        
         try {
-            const response = await axios.post(`/api/v1/users/login`,postData)
+            const response = await axios.post(`/api/v1/users/login`,loginInfo)
             console.log('API Response:', response);
             setLoginInfo({
                 email: '',
