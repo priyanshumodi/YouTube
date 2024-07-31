@@ -16,8 +16,9 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         addUser: (state, action) => {
+            console.log(action.payload)
             state.user = {
-                name: action.payload.fullName,
+                name: action.payload.name,
                 username: action.payload.username,
                 email: action.payload.email,
                 avatar: action.payload.avatar,
