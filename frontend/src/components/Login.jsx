@@ -1,10 +1,20 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import axios from "axios"
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from './utils/ResponseMessage';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../features/auth/userSlice';
 
 const Login = () => {
+    const navigate = useNavigate()
+
+    const location = useLocation()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        return handleError(location.state?.message)
+    },[])
  
     const [loginInfo, setLoginInfo] = useState({
         email: '',
@@ -29,12 +39,21 @@ const Login = () => {
         
         try {
             const response = await axios.post(`/api/v1/users/login`,loginInfo)
-            console.log('API Response:', response);
-            setLoginInfo({
-                email: '',
-                password: ''
-            })
-            return handleSuccess("successfully Login")
+            const result = response.data
+            console.log('API Response:', result);
+            if(result.success) {
+                handleSuccess("successfully Login")
+                dispatch(addUser(result.data.user))
+                
+                setTimeout(() => {
+                    navigate('/home')
+                }, 1000)
+
+                setLoginInfo({
+                    email: '',
+                    password: ''
+                })
+            }
         } catch (error) {
             return handleError("invalid user or password",error)
         }
