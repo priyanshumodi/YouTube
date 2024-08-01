@@ -1,7 +1,9 @@
-export const authenticate = (navigate) => {
-    const isAuthenticated = false; // just for testing
+import { useSelector } from "react-redux";
+export const authenticate = (navigate, isAuthenticated) => {
     if (!isAuthenticated) {
       navigate('/user/login');
+    } else {
+      navigate('/home')
     }
   };
   

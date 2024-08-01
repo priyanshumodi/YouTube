@@ -10,7 +10,9 @@ const Healthcheck = () => {
     setMsg(data.data)
   }
   const user = useSelector(state => state.userReducer.user)
-  console.log(user)
+  const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated)
+  console.log(user, isAuthenticated)
+  
   response()
   return (
     <div>Healthcheck: {msg}</div>

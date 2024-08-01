@@ -18,7 +18,7 @@ export const userSlice = createSlice({
         addUser: (state, action) => {
             console.log(action.payload)
             state.user = {
-                name: action.payload.name,
+                name: action.payload.fullName,
                 username: action.payload.username,
                 email: action.payload.email,
                 avatar: action.payload.avatar,
