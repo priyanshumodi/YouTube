@@ -1,10 +1,19 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from './utils/ResponseMessage';
+import { useSelector } from 'react-redux';
 
 const Signup = () => {
+    const navigate = useNavigate()
+    const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated)
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate('/home')
+        }
+    },[isAuthenticated])
+
     const [signupInfo, setSignupInfo] = useState({
         fullName: '',
         username: '',

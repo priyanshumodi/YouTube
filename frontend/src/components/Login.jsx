@@ -5,8 +5,15 @@ import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from './utils/ResponseMessage';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../features/auth/userSlice';
+import { useSelector } from 'react-redux';
 
 const Login = () => {
+    const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated)
+    useEffect(() => {
+        if(isAuthenticated) {
+            navigate('/home')
+        }
+    },[isAuthenticated])
     const navigate = useNavigate()
 
     const location = useLocation()
