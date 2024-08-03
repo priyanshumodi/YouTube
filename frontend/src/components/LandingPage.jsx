@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react'
-import ytLogo from '../assets/images/yt-logo-mobile.png'
+import ytLogo from './assets/images/yt-logo-mobile.png'
 import { useNavigate } from 'react-router-dom'
 import {authenticate} from './utils/authenticate'
 import { useSelector } from 'react-redux'

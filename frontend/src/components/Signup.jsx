@@ -4,8 +4,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from './utils/ResponseMessage';
 import { useSelector } from 'react-redux';
+import Loader from './shared/Loader';
 
 const Signup = () => {
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated)
     useEffect(() => {
@@ -45,7 +47,7 @@ const Signup = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        setLoading(true)
         const {fullName, username, email, password, confirmPassword, avatar, coverImage} = signupInfo;
         console.log(signupInfo)
 
@@ -81,14 +83,18 @@ const Signup = () => {
                 avatar: null,
                 coverImage: null
             })
+            setLoading(false)
             return handleSuccess("successfully Login")
         } catch (error) {
+            setLoading(false)
             return handleError("Something went wrong")
         }
 
     }
     
     return (
+    <>
+        {loading && <Loader />}
     <section className="bg-gray-50 h-auto">
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-auto lg:py-0">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-20 md:h-auto sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -251,7 +257,9 @@ const Signup = () => {
                             <a className="font-medium text-blue-600 hover:underline dark:text-amber-600" href="#">Terms and Conditions</a></label>
                         </div>
                     </div>
-                    <button type="submit" className="w-full bg-amber-600 text-white hover:bg-amber-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Create an account</button>
+                    <button type="submit" className="w-full bg-amber-600 text-white hover:bg-amber-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    {loading ? "creating..." : "Create an account"}
+                    </button>
                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                         Already have an account? 
                         <Link 
@@ -267,7 +275,7 @@ const Signup = () => {
     </div>
     <ToastContainer />
     </section>
-
+    </>
     )
 }
 

@@ -9,6 +9,8 @@ import PrivateRoutes from './components/utils/PrivateRoutes'
 import axios  from 'axios'
 import { useDispatch } from 'react-redux'
 import { addUser } from './features/auth/userSlice'
+import UserDetail from './components/userdetail/UserDetail'
+import Layout from './components/Layout/Layout'
 
 function App() {
   const dispatch = useDispatch()
@@ -37,6 +39,11 @@ function App() {
             <Route path='/healthcheck' element={<Healthcheck />} />
             <Route path='/' element={<LandingPage/>} />
             <Route path='/home' element={<PrivateRoutes><Home /></PrivateRoutes>} />
+            <Route path='/user/detail' element={<UserDetail/>} />
+
+            <Route path='/app' element={<Layout />}>
+              
+            </Route>
         </Routes>
     </BrowserRouter>
     </>
