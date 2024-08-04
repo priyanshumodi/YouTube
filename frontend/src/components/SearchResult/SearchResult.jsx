@@ -18,7 +18,7 @@ const SearchResult = () => {
     fetchSearchResults();
   },[searchQuery])
 
-  const fetchSearchResults = () => {
+  const fetchSearchResults = async () => {
     dispatch(toggleLoading())
     const options = {
       params: {
@@ -29,9 +29,9 @@ const SearchResult = () => {
     }
 
     try {
-      const response = fetchDataFromApi(`/`,options)
+      const response = await fetchDataFromApi(`/videos`,options)
       console.log(response);
-      // setResult(res?.contents);
+      setResult(response?.docs);
       dispatch(toggleLoading())
     } catch (error) {
       dispatch(toggleLoading())
@@ -44,8 +44,9 @@ const SearchResult = () => {
         <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-black">
             <div className="grid grid-cols-1 gap-2 p-5">
                 {result?.map((item) => {
-                    if (item?.type !== "video") return false;
-                    let video = item?.video;
+                    // if (item?.type !== "video") return false;
+                    // let video = item?.video;
+                    let video = item
                     return (
                         <SearchResultVideoCard
                             key={video?.videoId}
