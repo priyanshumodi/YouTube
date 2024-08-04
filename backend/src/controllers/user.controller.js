@@ -4,7 +4,7 @@ import { User } from '../models/user.model.js'
 import {uploadOnCloudinary} from '../utils/cloudinary.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
 import  jwt  from 'jsonwebtoken'
-import mongoose from 'mongoose'
+import mongoose, { isValidObjectId } from 'mongoose'
 
 const helloUser = asyncHandler(async (req, res) => {
     return res
@@ -470,6 +470,24 @@ const getWatchHistory = asyncHandler(async (req, res) => {
 
 })
 
+const getUserById = asyncHandler(async(req,res) => {
+   const {id} = req.body;
+   if(!isValidObjectId(id)) {
+    throw new ApiError(400,'Invalid user id')
+   }
+
+   const user = await User.findById(id).select("-password -accessToken -refreshToken")
+
+   if(!user) {
+    throw new ApiError(500, 'something went wrong when user fetch')
+   }
+
+   return res
+        .status(200)
+        .json(new ApiResponse(200, user, "user fetched successfully"))
+   
+})
+
 export {
     registerUser,
     loginUser,
@@ -482,5 +500,6 @@ export {
     updateUserCoverImage,
     getUserChannelProfile,
     getWatchHistory,
-    helloUser
+    helloUser,
+    getUserById
 }
