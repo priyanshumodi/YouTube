@@ -482,7 +482,7 @@ const getUserById = asyncHandler(async(req,res) => {
     throw new ApiError(500, 'something went wrong when user fetch')
    }
    
-   console.log(user)
+//    console.log(user)
    return res
         .status(200)
         .json(new ApiResponse(200, user, "user fetched successfully"))
