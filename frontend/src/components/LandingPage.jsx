@@ -10,12 +10,13 @@ const LandingPage = () => {
   const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      authenticate(navigate, isAuthenticated);
-    }, 1000);
-
+    if(!isAuthenticated) {
+      const timer = setTimeout(() => {
+        authenticate(navigate,   isAuthenticated);
+      }, 1000);
+    }
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [!isAuthenticated]);
 
   return (
     <div className='flex items-center justify-center h-screen bg-black'>

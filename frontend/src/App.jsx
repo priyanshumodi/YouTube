@@ -4,13 +4,16 @@ import Login from './components/Login'
 import Signup from './components/Signup'
 import Healthcheck from './components/Healthcheck'
 import LandingPage from './components/LandingPage'
-import Home from './components/Home'
+
 import PrivateRoutes from './components/utils/PrivateRoutes'
 import axios  from 'axios'
 import { useDispatch } from 'react-redux'
 import { addUser } from './features/auth/userSlice'
 import UserDetail from './components/userdetail/UserDetail'
 import Layout from './components/Layout/Layout'
+import Feed from './components/Home/Feed'
+import SearchResult from './components/SearchResult/SearchResult'
+import VideoDetails from './components/Video/VideoDetails'
 
 function App() {
   const dispatch = useDispatch()
@@ -38,11 +41,13 @@ function App() {
             <Route path='/user/signup' element={<Signup />}/>
             <Route path='/healthcheck' element={<Healthcheck />} />
             <Route path='/' element={<LandingPage/>} />
-            <Route path='/home' element={<PrivateRoutes><Home /></PrivateRoutes>} />
+            
             <Route path='/user/detail' element={<UserDetail/>} />
 
-            <Route path='/app' element={<Layout />}>
-              
+            <Route path='/app' element={<PrivateRoutes><Layout /></PrivateRoutes>}>
+                <Route index exact element={<PrivateRoutes><Feed /></PrivateRoutes>} />
+                <Route path='searchResult/:searchQuery' element={<PrivateRoutes><SearchResult /></PrivateRoutes>}/>
+                <Route path='video/:id' element={<PrivateRoutes><VideoDetails /></PrivateRoutes>} />
             </Route>
         </Routes>
     </BrowserRouter>

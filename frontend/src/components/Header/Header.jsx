@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import ytLogo from '../assets/images/yt-logo.png'
@@ -9,16 +9,18 @@ import { IoIosSearch } from 'react-icons/io';
 import { RiVideoAddLine } from 'react-icons/ri';
 import { FiBell } from 'react-icons/fi';
 import { CgClose } from 'react-icons/cg';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleMobilMenu } from '../../features/hooks/hookSlice.js';
 import Loader from "../shared/Loader.jsx"
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [mobileMenu, setMobileMenu] = useState(false);
-  const avatar = useSelector(state => state.userReducer.user.avatar)
 
-//   const {loading, mobileMenu, setMobileMenu} = useContext(Context);
+  const dispatch = useDispatch()
+
+  const mobileMenu = useSelector(state => state.hookReducer.mobileMenu)
+  const loading = useSelector(state => state.hookReducer.loading)
+  const avatar = useSelector(state => state.userReducer.user.avatar)
 
   const navigate = useNavigate();
 
@@ -29,7 +31,7 @@ const Header = () => {
   };
 
   const mobileMenuToggle = () => {
-    setMobileMenu(!mobileMenu);
+    dispatch(toggleMobilMenu())
   }
 
   const { pathname } = useLocation();
@@ -37,7 +39,7 @@ const Header = () => {
 
   return (
     <div className="sticky top-0 z-10 flex flex-row items-center justify-between h-14 px-4 md:px-5 bg-white dark:bg-black">
-        {/* {loading && <Loader />} */}
+        {loading && <Loader />}
 
         <div className="flex h-5 items-center">
             {pageName !== "video" && (

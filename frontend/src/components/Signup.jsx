@@ -12,7 +12,7 @@ const Signup = () => {
     const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated)
     useEffect(() => {
         if(isAuthenticated) {
-            navigate('/home')
+            navigate('/app')
         }
     },[isAuthenticated])
 

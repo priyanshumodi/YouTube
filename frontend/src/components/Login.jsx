@@ -13,7 +13,7 @@ const Login = () => {
     const isAuthenticated = useSelector(state => state.userReducer.isAuthenticated)
     useEffect(() => {
         if(isAuthenticated) {
-            navigate('/home')
+            navigate('/app')
         }
     },[isAuthenticated])
     const navigate = useNavigate()
@@ -56,7 +56,7 @@ const Login = () => {
                 dispatch(addUser(result.data.user))
                 
                 setTimeout(() => {
-                    navigate('/home')
+                    navigate('/app')
                 }, 1000)
 
                 setLoginInfo({

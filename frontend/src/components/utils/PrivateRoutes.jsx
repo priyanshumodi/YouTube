@@ -7,7 +7,7 @@ const PrivateRoutes = ({children}) => {
   let message = ""
   if(!isAuthenticated)
     message = "unAuthorized login first" 
-  return isAuthenticated ? children ? children : <Outlet /> : <Navigate to="/" />
+  return isAuthenticated ? children : <Navigate to="/user/login" />
 }
 
 export default PrivateRoutes
