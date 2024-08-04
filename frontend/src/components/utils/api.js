@@ -1,8 +1,8 @@
 import axios from "axios";
 
-  export const fetchDataFromApi = async(url) => {
+  export const fetchDataFromApi = async(url, options) => {
     try {
-      const {data} = await axios.get(`${url}`);
+      const {data} = await axios.get(`/api/v1/${url}`, options);
       console.log(data)
       return data;
     } catch (error) {

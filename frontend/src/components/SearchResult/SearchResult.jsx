@@ -20,11 +20,23 @@ const SearchResult = () => {
 
   const fetchSearchResults = () => {
     dispatch(toggleLoading())
-    fetchDataFromApi(`search/?q=${searchQuery}`).then((res) => {
-      console.log(res);
-      setResult(res?.contents);
+    const options = {
+      params: {
+        query: searchQuery, // Search keyword
+        page: 1,
+        limit: 10,
+      },
+    }
+
+    try {
+      const response = fetchDataFromApi(`/`,options)
+      console.log(response);
+      // setResult(res?.contents);
       dispatch(toggleLoading())
-    })
+    } catch (error) {
+      dispatch(toggleLoading())
+      console.log(error)
+    }
   }
   return (
     <div className="flex flex-row h-[calc(100%-56px)]">
