@@ -4,21 +4,35 @@ import { abbreviateNumber } from 'js-abbreviation-number'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 
 import VideoLength from "../shared/VideoLength"
+import axios from 'axios'
 
 const SearchResultVideoCard = ({video}) => {
-    console.log(video)
+    // console.log(video)
+
+    let user;
+    const fetchUserDetails = async (id) => {
+        try {
+            const result = await axios.post('/api/v1/users/getUser',{id})
+            // console.log(result)
+            user = result.data.data
+            console.log('user',user)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if(video) {
         fetchUserDetails(video?.owner)
     }
   return (
-    <Link to={`/video/${video?.videoId}`}>
+    <Link to={`/app/video/${video?._id}`}>
         <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:hover:bg-white/[0.1] rounded-xl md:p-4">
             <div className="relative flex shrink-0 h-48 md:h-28 lg:h-40 xl:h-48 w-full md:w-48 lg:w-64 xl:w-80 rounded-xl bg-slate-800 overflow-hidden">
                 <img
                     className="h-full w-full object-cover"
                     src={video?.thumbnail}
                 />
-                {video?.lengthSeconds && (
+                {video?.duration && (
                     <VideoLength time={video?.duration} />
                 )}
             </div>
@@ -34,15 +48,14 @@ const SearchResultVideoCard = ({video}) => {
                         <div className="flex h-9 w-9 rounded-full overflow-hidden">
                             <img
                                 className="h-full w-full object-cover"
-                                src={video?.author?.avatar[0]?.url}
+                                src={user.avatar}
                             />
                         </div>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold mt-2 text-white/[0.7] flex items-center">
-                            {video?.author?.title}
-                            {video?.author?.badges[0]?.type ===
-                                "VERIFIED_CHANNEL" && (
+                            {user?.fullName}
+                            {user && (
                                 <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                             )}
                         </span>
