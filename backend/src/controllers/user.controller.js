@@ -476,12 +476,13 @@ const getUserById = asyncHandler(async(req,res) => {
     throw new ApiError(400,'Invalid user id')
    }
 
-   const user = await User.findById(id).select("-password -accessToken -refreshToken")
+   const user = await User.findById(id,{fullName:1, avatar: 1})
 
    if(!user) {
     throw new ApiError(500, 'something went wrong when user fetch')
    }
-
+   
+   console.log(user)
    return res
         .status(200)
         .json(new ApiResponse(200, user, "user fetched successfully"))
