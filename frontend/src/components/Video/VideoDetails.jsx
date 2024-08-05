@@ -1,4 +1,4 @@
-import React,{ useState, useEffect, useRef} from 'react'
+import React,{ useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
@@ -13,13 +13,6 @@ import axios from 'axios'
 
 
 const VideoDetails = () => {
-
-  const [playing, setPlaying] = useState(true);
-  const playerRef = useRef(null);
-
-  const togglePlayPause = () => {
-    setPlaying(!playing);
-  };
 
     const dispatch = useDispatch()
 
@@ -73,8 +66,8 @@ const VideoDetails = () => {
   return (
     <div className="flex justify-center flex-row h-[calc(100%-56px)] bg-black">
       <div className="w-full max-w-[1280px] flex flex-col lg:flex-row">
-        <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-400px)] px-4 py-3lg:pyoverflow-y-auto">
-          <div className="h-[200px] md:h-[400px] lg:h-[400px] xl:h-[550px] ml-[-16px] lg:ml-0 mr-[-16plg:mr-0">
+        <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-500px)] px-4 py-3lg:pyoverflow-y-auto">
+          <div className="h-[200px] md:h-[400px] lg:h-[400px]  ml-[-16px] lg:ml-0 mr-[-16plg:mr-0">
             <ReactPlayer
                 url={video?.videoFile}
                 controls
@@ -128,7 +121,7 @@ const VideoDetails = () => {
         </div>
         <div className="flex flex-col py-6 px-4 overflow-y-auto lg:w-[350px] xl:w-[400px]">
           {relatedVideos?.map((item, index) => {
-            if (item?.type !== "video") return false;
+            if (!item) return false;
             return (
               <SuggestionVideoCard
                 key={index}
