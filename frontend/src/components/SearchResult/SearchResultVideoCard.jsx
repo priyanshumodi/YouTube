@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { abbreviateNumber } from 'js-abbreviation-number'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
@@ -8,22 +8,26 @@ import axios from 'axios'
 
 const SearchResultVideoCard = ({video}) => {
     // console.log(video)
+    const [userName,setUserName] = useState('')
+    const [userAvatar, setUserAvatar] = useState('')
 
-    let user;
+    useEffect(() => {
+        fetchUserDetails(video?.owner)
+    }, [video])
+
     const fetchUserDetails = async (id) => {
         try {
             const result = await axios.post('/api/v1/users/getUser',{id})
             // console.log(result)
-            user = result.data.data
+            const user = result.data.data
             console.log('user',user)
+            setUserAvatar(user?.avatar)
+            setUserName(user?.fullName)
         } catch (error) {
             console.log(error)
         }
     }
 
-    if(video) {
-        fetchUserDetails(video?.owner)
-    }
   return (
     <Link to={`/app/video/${video?._id}`}>
         <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:hover:bg-white/[0.1] rounded-xl md:p-4">
@@ -48,14 +52,14 @@ const SearchResultVideoCard = ({video}) => {
                         <div className="flex h-9 w-9 rounded-full overflow-hidden">
                             <img
                                 className="h-full w-full object-cover"
-                                src={user.avatar}
+                                src={userAvatar}
                             />
                         </div>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold mt-2 text-white/[0.7] flex items-center">
-                            {user?.fullName}
-                            {user && (
+                            {userName}
+                            {true && (
                                 <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                             )}
                         </span>

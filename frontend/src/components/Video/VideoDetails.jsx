@@ -1,6 +1,6 @@
-import React,{ useState, useEffect, useContext} from 'react'
+import React,{ useState, useEffect, useRef} from 'react'
 import { useParams } from 'react-router-dom'
-import ReactPlayer from 'react-player/youtube'
+import ReactPlayer from 'react-player'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { AiOutlineLike } from 'react-icons/ai'
 import { abbreviateNumber } from 'js-abbreviation-number'
@@ -9,8 +9,17 @@ import {fetchDataFromApi} from "../utils/api"
 import { useDispatch } from 'react-redux'
 import SuggestionVideoCard from "./SuggestionVideoCard"
 import { toggleLoading } from '../../features/hooks/hookSlice'
+import axios from 'axios'
+
 
 const VideoDetails = () => {
+
+  const [playing, setPlaying] = useState(true);
+  const playerRef = useRef(null);
+
+  const togglePlayPause = () => {
+    setPlaying(!playing);
+  };
 
     const dispatch = useDispatch()
 
@@ -18,16 +27,36 @@ const VideoDetails = () => {
   const [relatedVideos, setRelatedVideos] = useState();
   const { id } = useParams();
 
+  const [userName,setUserName] = useState('')
+  const [userAvatar, setUserAvatar] = useState('')
+
   useEffect(() => {
     document.getElementById("root").classList.add("custom-h");
     fetchVideoDetails();
     fetchRelatedVideos();
   }, [id])
 
+  useEffect(() => {
+    fetchVideoUser(video?.owner)
+}, [video])
+
+  const fetchVideoUser = async (id) => {
+    try {
+        const result = await axios.post('/api/v1/users/getUser',{id})
+        // console.log(result)
+        const user = result.data.data
+        console.log('user',user)
+        setUserAvatar(user?.avatar)
+        setUserName(user?.fullName)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
   const fetchVideoDetails = () => {
     dispatch(toggleLoading())
-    fetchDataFromApi(`video/details/?id=${id}`).then((res) => {
-      console.log(res);
+    fetchDataFromApi(`/videos/${id}`).then((res) => {
+      console.log("get video detail",res);
       setVideo(res);
       dispatch(toggleLoading())
     })
@@ -35,9 +64,9 @@ const VideoDetails = () => {
 
   const fetchRelatedVideos = () => {
     dispatch(toggleLoading())
-    fetchDataFromApi(`video/related-contents/?id=${id}`).then((res) => {
-      console.log(res);
-      setRelatedVideos(res);
+    fetchDataFromApi(`/videos`).then((res) => {
+      console.log("get related video ",res.docs);
+      setRelatedVideos(res.docs);
       dispatch(toggleLoading())
     })
   }
@@ -47,7 +76,7 @@ const VideoDetails = () => {
         <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-400px)] px-4 py-3lg:pyoverflow-y-auto">
           <div className="h-[200px] md:h-[400px] lg:h-[400px] xl:h-[550px] ml-[-16px] lg:ml-0 mr-[-16plg:mr-0">
             <ReactPlayer
-                url={`https://www.youtube.com/watch?v=${id}`}
+                url={video?.videoFile}
                 controls
                 width="100%"
                 height="100%"
@@ -64,15 +93,14 @@ const VideoDetails = () => {
                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
                   <img 
                     className='h-full w-full object-cover'
-                    src={video?.author?.avatar[0]?.url}
+                    src={userAvatar}
                   />
                 </div>
               </div>
               <div className="flex flex-col ml-3">
                 <div className="text-white text-md font-semibold flex items-center">
-                  {video?.author?.title}
-                  {video?.author?.badges[0]?.type ===
-                    "VERIFIED_CHANNEL" && (
+                  {userName}
+                  {true && (
                       <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] ml-1" />
                     )}
                 </div>
@@ -91,7 +119,7 @@ const VideoDetails = () => {
               </div>
               <div className="flex items-center justify-center h-11 px-6 rounded-3xl bg-white/ml-4">
                 {`${abbreviateNumber(
-                  video?.stats?.views,
+                  video?.views,
                   2
                 )} Views`}
               </div>
@@ -99,12 +127,12 @@ const VideoDetails = () => {
           </div>
         </div>
         <div className="flex flex-col py-6 px-4 overflow-y-auto lg:w-[350px] xl:w-[400px]">
-          {relatedVideos?.contents?.map((item, index) => {
+          {relatedVideos?.map((item, index) => {
             if (item?.type !== "video") return false;
             return (
               <SuggestionVideoCard
                 key={index}
-                video={item?.video}
+                video={item}
               />
             );
           })}

@@ -49,7 +49,7 @@ const SearchResult = () => {
                     let video = item
                     return (
                         <SearchResultVideoCard
-                            key={video?.videoId}
+                            key={video?._id}
                             video={video}
                         />
                     );
