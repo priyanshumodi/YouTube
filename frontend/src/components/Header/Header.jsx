@@ -97,9 +97,12 @@ const Header = () => {
                     <FiBell className="text-white text-xl cursor-pointer" />
                 </div>
             </div>
-            <div className="flex h-8 w-8 overflow-hidden rounded-full md:ml-4">
+            <Link 
+            to='/test'
+            className='flex h-8 w-8 overflow-hidden rounded-full md:ml-4'
+            >
                 <img src={avatar} alt='profile' className='object-cover w-full h-full'/>
-            </div>
+            </Link>
         </div>
     </div>
   );

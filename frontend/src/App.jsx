@@ -14,6 +14,7 @@ import Layout from './components/Layout/Layout'
 import Feed from './components/Home/Feed'
 import SearchResult from './components/SearchResult/SearchResult'
 import VideoDetails from './components/Video/VideoDetails'
+import Test from './components/Home/Test'
 
 function App() {
   const dispatch = useDispatch()
@@ -49,6 +50,8 @@ function App() {
                 <Route path='searchResult/:searchQuery' element={<PrivateRoutes><SearchResult /></PrivateRoutes>}/>
                 <Route path='video/:id' element={<PrivateRoutes><VideoDetails /></PrivateRoutes>} />
             </Route>
+
+            <Route path='/test' element={<Test />} />
         </Routes>
     </BrowserRouter>
     </>
