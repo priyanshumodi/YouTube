@@ -5,6 +5,7 @@ import { BsFillCheckCircleFill } from 'react-icons/bs'
 
 import VideoLength from "../shared/VideoLength"
 import axios from 'axios'
+import TimeAgo from '../shared/TimeAgo'
 
 const SearchResultVideoCard = ({video}) => {
     // console.log(video)
@@ -72,7 +73,7 @@ const SearchResultVideoCard = ({video}) => {
                                 .
                             </span>
                             <span className="truncate">
-                                {video?.publishedTimeText}
+                                <TimeAgo timestamp={video?.createdAt} />
                             </span>
                         </div>
                     </div>

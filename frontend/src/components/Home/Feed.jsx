@@ -23,7 +23,7 @@ const Feed = () => {
                         if (item.type !== "video") return false;
                         return (
                             <VideoCard
-                                key={item?.video?.videoId}
+                                key={item?.video?._id}
                                 video={item?.video}
                             />
                         );
