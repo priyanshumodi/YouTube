@@ -29,8 +29,21 @@ const getVideoComments = asyncHandler(async (req, res) => {
             }
         },
         {
+            $unwind: "$allComments"
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'allComments.owner', //its data that collect in this
+                foreignField: '_id', //its place where localfield data found
+                as: 'user'
+            }
+        },
+        {
             $project: {
-                allComments: 1
+                comment: {
+                    $mergeObjects: ["$$ROOT.allComments", { owner: { _id: {$arrayElemAt: ["$user._id", 0]}, username: {$arrayElemAt: ["$user.username", 0]} } }]
+                }
             }
         }
     ])
