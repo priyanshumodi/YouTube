@@ -32,7 +32,7 @@ const Login = () => {
 
     const handleChange = (e) => {
         const {name, value} = e.target;
-        console.log(name, value)
+        // console.log(name, value)
         const currentInfo = {...loginInfo}
         currentInfo[name] = value
         setLoginInfo(currentInfo)
@@ -42,7 +42,7 @@ const Login = () => {
         e.preventDefault()
         setLoading(true)
         const {email, password} = loginInfo;
-        console.log(email, password)
+        // console.log(email, password)
         if(!email.trim() || !password.trim()) {
             return handleError("email or password are required")
         }
@@ -50,7 +50,7 @@ const Login = () => {
         try {
             const response = await axios.post(`/api/v1/users/login`,loginInfo)
             const result = response.data
-            console.log('API Response:', result);
+            // console.log('API Response:', result);
             if(result.success) {
                 handleSuccess("successfully Login")
                 dispatch(addUser(result.data.user))

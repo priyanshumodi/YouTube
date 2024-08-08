@@ -1,11 +1,31 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import { abbreviateNumber } from 'js-abbreviation-number'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 
 import VideoLength from '../shared/VideoLength'
+import TimeAgo from '../shared/TimeAgo'
+import axios from 'axios'
 
 const SuggestionVideoCard = ({video}) => {
+
+    const [userName,setUserName] = useState('')
+
+    useEffect(() => {
+        fetchUserDetails(video?.owner)
+    }, [video])
+
+    const fetchUserDetails = async (id) => {
+        try {
+            const result = await axios.post('/api/v1/users/getUser',{id})
+            // console.log(result)
+            const user = result.data.data
+            // console.log('user',user)
+            setUserName(user?.fullName)
+        } catch (error) {
+            console.log(error)
+        }
+    }
   return (
     <Link to={`/app/video/${video?._id}`}>
         <div className="flex mb-3">
@@ -23,9 +43,8 @@ const SuggestionVideoCard = ({video}) => {
                     {video?.title}
                 </span>
                 <span className="text-[12px] lg:text-[10px] xl:text-[12px] font-semibold mt-2 text-white/[0.7] flex items-center">
-                    {video?.author?.title}
-                    {video?.author?.badges[0]?.type ===
-                        "VERIFIED_CHANNEL" && (
+                    {userName}
+                    {true && (
                         <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                     )}
                 </span>
@@ -38,7 +57,7 @@ const SuggestionVideoCard = ({video}) => {
                         .
                     </span>
                     <span className="truncate">
-                        {video?.publishedTimeText}
+                        <TimeAgo timestamp={video?.createdAt}/>
                     </span>
                 </div>
             </div>

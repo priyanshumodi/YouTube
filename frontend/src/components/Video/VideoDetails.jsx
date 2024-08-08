@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import SuggestionVideoCard from "./SuggestionVideoCard"
 import { toggleLoading } from '../../features/hooks/hookSlice'
 import axios from 'axios'
+import Comment from './Comment'
 
 
 const VideoDetails = () => {
@@ -18,8 +19,6 @@ const VideoDetails = () => {
 
   const [video, setVideo] = useState();
   const [relatedVideos, setRelatedVideos] = useState();
-  const [isActiveComment, setIsActiveComment] = useState(false);
-  const [comment, setComment] = useState('')
   const { id } = useParams();
 
   const [userName,setUserName] = useState('')
@@ -32,25 +31,14 @@ const VideoDetails = () => {
   }, [id])
 
   useEffect(() => {
+    if(video?.owner)
     fetchVideoUser(video?.owner)
 }, [video])
 
-  useEffect(() => {
-    if(comment === '') {
-      setIsActiveComment(false)
-    } else {
-      setIsActiveComment(true)
-    }
-  }, [comment])
 
-  const handleCommentChange = (e) => {
-    const newComment = e.target.value
-    setComment(newComment)
-  }
-
-  const fetchVideoUser = async (id) => {
+  const fetchVideoUser = async (owner) => {
     try {
-        const result = await axios.post('/api/v1/users/getUser',{id})
+        const result = await axios.post('/api/v1/users/getUser',{owner})
         // console.log(result)
         const user = result.data.data
         console.log('user',user)
@@ -64,7 +52,7 @@ const VideoDetails = () => {
   const fetchVideoDetails = () => {
     dispatch(toggleLoading())
     fetchDataFromApi(`/videos/${id}`).then((res) => {
-      console.log("get video detail",res);
+      // console.log("get video detail",res);
       setVideo(res);
       dispatch(toggleLoading())
     })
@@ -73,7 +61,7 @@ const VideoDetails = () => {
   const fetchRelatedVideos = () => {
     dispatch(toggleLoading())
     fetchDataFromApi(`/videos`).then((res) => {
-      console.log("get related video ",res.docs);
+      // console.log("get related video ",res.docs);
       setRelatedVideos(res.docs);
       dispatch(toggleLoading())
     })
@@ -81,7 +69,7 @@ const VideoDetails = () => {
   return (
     <div className="flex justify-center flex-row h-auto bg-black">
       <div className="w-full max-w-[1280px] flex flex-col lg:flex-row h-auto">
-        <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-500px)] px-4 py-3lg:pyoverflow-y-auto">
+        <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-500px)] px-4 py-3lg:pyoverflow-y-auto pl-12">
           {/* video player */}
           <div className="h-[200px] md:h-[400px] lg:h-[400px]  ml-[-16px] lg:ml-0 mr-[-16plg:mr-0">
             <ReactPlayer
@@ -139,26 +127,7 @@ const VideoDetails = () => {
           </div>
           
           {/* comment section starts */}
-          <div className="bg-card p-4 rounded-lg shadow-md dark:shadow-lg">
-              <h2 className="text-lg font-semibold text-white">71 Comments</h2>
-              <div className="flex items-center mt-4">
-                <img src="http://res.cloudinary.com/priyanshu7/image/upload/v1720862753/zl04rns9qldmgod53acf.jpg" alt="User Avatar" className="w-10 h-10 rounded-full mr-4 object-cover" />
-                <input
-                  type="text"
-                  placeholder="Add a comment..."
-                  onChange={handleCommentChange}
-                  name='comment'
-                  value={comment}
-                  className="flex-grow p-2 border border-border text-white rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-ring bg-black"
-                />
-                <button className="ml-2 text-white hover:text-muted px-4 py-2 rounded-3xl hover:bg-white/[0.20]">Cancel</button>
-                <button className={`ml-4 ${isActiveComment ? "text-black bg-blue-500" : "bg-white/[0.15] text-zinc-400"} hover:bg-primary/80 px-4 py-2 rounded-3xl font-medium`} >Comment</button>
-              </div>
-              {/* <div className="flex justify-between items-center mt-4">
-                <span className="text-muted-foreground dark:text-muted-foreground">Sort by</span>
-                <button className="text-muted-foreground hover:text-muted-foreground/80 dark:text-muted-foreground dark:hover:text-muted-foreground/80">Sort Options</button>
-              </div> */}
-           </div>
+          {video?._id && <Comment video={video}/> }
         </div>
         {/* related video */}
         <div className="flex flex-col py-6 px-4 overflow-y-auto lg:w-[350px] xl:w-[400px]">

@@ -21,7 +21,7 @@ const SearchResultVideoCard = ({video}) => {
             const result = await axios.post('/api/v1/users/getUser',{id})
             // console.log(result)
             const user = result.data.data
-            console.log('user',user)
+            // console.log('user',user)
             setUserAvatar(user?.avatar)
             setUserName(user?.fullName)
         } catch (error) {
