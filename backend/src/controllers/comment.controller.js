@@ -42,7 +42,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
         {
             $project: {
                 comment: {
-                    $mergeObjects: ["$$ROOT.allComments", { owner: { _id: {$arrayElemAt: ["$user._id", 0]}, username: {$arrayElemAt: ["$user.username", 0]} } }]
+                    $mergeObjects: ["$$ROOT.allComments", { owner: { _id: {$arrayElemAt: ["$user._id", 0]}, username: {$arrayElemAt: ["$user.username", 0]}, avatar: {$arrayElemAt: ["$user.avatar", 0]} } }]
                 }
             }
         }
