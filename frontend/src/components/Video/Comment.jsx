@@ -2,8 +2,13 @@ import React,{useState, useEffect} from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
 import { fetchDataFromApi } from '../utils/api';
 import TimeAgo from '../shared/TimeAgo';
+import { useDispatch } from 'react-redux';
+import { toggleLoading } from '../../features/hooks/hookSlice'
+import axios from 'axios';
 
 const Comment = ({video}) => {
+    const dispatch = useDispatch()
+  
     const [isActiveComment, setIsActiveComment] = useState(false);
     const [comment, setComment] = useState('')
     const [videoComment, setVideoComment] = useState(null)
@@ -38,6 +43,19 @@ const Comment = ({video}) => {
         setComment(newComment)
       }
 
+    const handleSubmit = async () => {
+      dispatch(toggleLoading())
+
+      try {
+        const result = await axios.post(`/api/v1/comments/${video?._id}`,{comment})
+        console.log(result)
+        setComment('')
+        dispatch(toggleLoading())
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
   return (
     <div>
         {/* add comment */}
@@ -53,9 +71,9 @@ const Comment = ({video}) => {
                   value={comment}
                   className="flex-grow p-2 border border-border text-white rounded-lg bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-ring bg-black"
                 />
-                <div className='flex flex-col'>
+                <div className='flex flex-col sm:flex-row'>
                     <button className="ml-2 text-white hover:text-muted px-4 py-2 rounded-3xl hover:bg-white/[0.20]">Cancel</button>
-                    <button className={`ml-4 ${isActiveComment ? "text-black bg-blue-500" : "bg-white/[0.15] text-zinc-400"} hover:bg-primary/80 px-4 py-2 rounded-3xl font-medium`} >Comment</button>
+                    <button className={`ml-4 ${isActiveComment ? "text-black bg-blue-500" : "bg-white/[0.15] text-zinc-400"} hover:bg-primary/80 px-4 py-2 rounded-3xl font-medium`} onClick={()=> (isActiveComment && handleSubmit())}>Comment</button>
                 </div>
               </div>
               {/* <div className="flex justify-between items-center mt-4">
