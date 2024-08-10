@@ -5,6 +5,7 @@ const initialState = {
     searchResults: [],
     selectCategory: "New",
     mobileMenu: false,
+    updateComment: ''
 }
 
 export const hookSlice = createSlice({
@@ -17,6 +18,9 @@ export const hookSlice = createSlice({
         toggleMobilMenu: (state) => {
             state.mobileMenu = !state.mobileMenu
         },
+        addUpdateComment: (state, action) => {
+            state.updateComment = action.payload
+        },
         addSearchResult: (state, action) => {
             console.log(action.payload)
             state.searchResults = action.payload
@@ -28,6 +32,6 @@ export const hookSlice = createSlice({
     }
 })
 
-export const {toggleLoading, toggleMobilMenu, addSearchResult, addSelectedCategory} = hookSlice.actions
+export const {toggleLoading, toggleMobilMenu, addSearchResult, addSelectedCategory, addUpdateComment} = hookSlice.actions
 
 export default hookSlice.reducer
