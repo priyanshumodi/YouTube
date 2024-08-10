@@ -52,13 +52,39 @@ const getUserChannelSubscribers = asyncHandler(async(req,res)=> {
         channel: channelId
     })
 
-    if(!subscriber) {
+    const subscribers = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(channelId)
+        }
+      },
+      {
+        $lookup: {
+          from: 'subscriptions',
+          localField: '_id',
+          foreignField: 'channel',
+          as: "subscriber"
+        }
+      },
+      {
+        $unwind: '$subscriber'
+      },
+      {
+        $project: {
+          subscriber: 1,
+          fullName: 1,
+          avatar: 1
+        }
+      }
+    ])
+
+    if(!subscribers) {
         throw new ApiError(500, "something went wrong while fatching subscriber")
     }
 
     return res
         .status(200)
-        .json(new ApiResponse(200, subscriber, "all subscriber of this channel fatched successfully"))
+        .json(new ApiResponse(200, subscribers, "all subscriber of this channel fatched successfully"))
 
 })
 
