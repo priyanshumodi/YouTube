@@ -1,21 +1,29 @@
 import React,{useState, useEffect} from 'react'
 import { AiOutlineLike } from 'react-icons/ai'
+import { FaEllipsisV } from 'react-icons/fa';
 import { fetchDataFromApi } from '../utils/api';
 import TimeAgo from '../shared/TimeAgo';
 import { useDispatch } from 'react-redux';
 import { toggleLoading } from '../../features/hooks/hookSlice'
 import axios from 'axios';
-
+import { MdDelete } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+import UpdateComment from './UpdateComment';
+import { addUpdateComment } from '../../features/hooks/hookSlice';
 const Comment = ({video}) => {
     const dispatch = useDispatch()
   
+    const user = useSelector(state => state.userReducer.user)
+
     const [isActiveComment, setIsActiveComment] = useState(false);
     const [comment, setComment] = useState('')
-    const [videoComment, setVideoComment] = useState(null)
+    const [videoComment, setVideoComment] = useState([])
+    const updateComment = useSelector(state => state.hookReducer.updateComment)
 
     useEffect(() => {
       fetchDataForVideoComments()
-    }, [video])
+    }, [video, updateComment])
 
     const fetchDataForVideoComments = async () => {
       const options = {
@@ -49,20 +57,41 @@ const Comment = ({video}) => {
       try {
         const result = await axios.post(`/api/v1/comments/${video?._id}`,{comment})
         console.log(result)
-        setComment('')
         dispatch(toggleLoading())
+        dispatch(addUpdateComment(`new${updateComment}`))
+        setComment('')
       } catch (error) {
         console.log(error)
       }
+    }
+
+    const handleCommentDelete = async(id) => {
+      dispatch(toggleLoading())
+
+      try {
+        const result = await axios.delete(`/api/v1/comments/c/${id}`);
+        console.log(result)
+        dispatch(toggleLoading())
+        dispatch(addUpdateComment(`delete${id}`))
+      } catch (error) {
+        console.log(error)
+        dispatch(toggleLoading())
+      }
+    }
+
+    const handleUpdateComment = (id) => {
+      dispatch(addUpdateComment(id))
+      console.log(id);
+      
     }
 
   return (
     <div>
         {/* add comment */}
         <div className="bg-card p-4 rounded-lg shadow-md dark:shadow-lg">
-              <h2 className="text-lg font-semibold text-white">71 Comments</h2>
+              <h2 className="text-lg font-semibold text-white">{videoComment?.length} Comments</h2>
               <div className="flex items-center mt-4">
-                <img src="http://res.cloudinary.com/priyanshu7/image/upload/v1720862753/zl04rns9qldmgod53acf.jpg" alt="User Avatar" className="w-11 h-11 rounded-full mr-4 object-cover" />
+                <img src={user?.avatar} alt="User Avatar" className="w-11 h-11 rounded-full mr-4 object-cover" />
                 <input
                   type="text"
                   placeholder="Add a comment..."
@@ -80,18 +109,38 @@ const Comment = ({video}) => {
                 <span className="text-muted-foreground dark:text-muted-foreground">Sort by</span>
                 <button className="text-muted-foreground hover:text-muted-foreground/80 dark:text-muted-foreground dark:hover:text-muted-foreground/80">Sort Options</button>
               </div> */}
-          </div>
+        </div>
           {/* all comments of video */}
           <div className="bg-background p-4 rounded-lg shadow-md mt-3">
             <ol>
-              {videoComment?.map((item) => (
+              {videoComment?.map((item) => {
+              return (
               <li key={item?.comment?._id}>
+                {(item?.comment?._id !== updateComment) ?
+                (
                   <div className="flex items-start mb-4">
                       <img src={item?.comment?.owner?.avatar} className="w-10 h-10 rounded-full mr-4 object-cover" />
                       <div className="flex-1 text-white">
-                      <p className="font-semibold text-foreground">
-                    @{item?.comment?.owner?.username} <span className="text-muted text-zinc-500 text-sm">{<TimeAgo timestamp={item?.comment?.createdAt} />}</span>
-                      </p>
+                        <div className='flex justify-between'>
+                          <p className="font-semibold text-foreground">
+                              @{item?.comment?.owner?.username} <span className="text-muted text-zinc-500 text-sm">{<TimeAgo timestamp={item?.comment?.createdAt} />}</span>
+                          </p>
+                      <div className='flex items-center'>
+                            {user?._id === item?.comment?.owner?._id && (
+                            <>
+                            <button onClick={() => handleUpdateComment(item?.comment?._id)} className='hover:bg-white/[0.20] p-2 rounded-full'>
+                                <FaRegEdit />
+                            </button>
+                            <button className='hover:bg-white/[0.20] p-2 rounded-full' onClick={()=>handleCommentDelete(item?.comment?._id)}>
+                                <MdDelete />
+                            </button>
+                            </>
+                            )}
+                            <div className='hover:bg-white/[0.20] p-2 rounded-full'>
+                                <FaEllipsisV />
+                            </div>
+                      </div>
+                      </div>
                       <p className="text-muted-foreground text-gray-200 text-sm">{item?.comment?.content}</p>
                       <div className="flex items-center mt-2">
                     <button className="text-muted hover:text-muted-foreground p-[7px] rounded-full hover:bg-zinc-600">
@@ -103,8 +152,11 @@ const Comment = ({video}) => {
                       </div>
                       </div>
                   </div>
-              </li>
-              ))} 
+                ) : (
+                  <UpdateComment comment={item}/>
+                )}
+              </li> )
+              })}
             </ol>
           </div>
     </div>

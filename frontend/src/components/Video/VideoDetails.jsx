@@ -21,8 +21,7 @@ const VideoDetails = () => {
   const [relatedVideos, setRelatedVideos] = useState();
   const { id } = useParams();
 
-  const [userName,setUserName] = useState('')
-  const [userAvatar, setUserAvatar] = useState('')
+  const [videoOwner,setVideoOwner] = useState({})
 
   useEffect(() => {
     document.getElementById("root").classList.add("custom-h");
@@ -31,22 +30,15 @@ const VideoDetails = () => {
   }, [id])
 
   useEffect(() => {
-    if(video?.owner)
+    // console.log(video?.owner)
     fetchVideoUser(video?.owner)
 }, [video])
 
 
   const fetchVideoUser = async (owner) => {
-    try {
-        const result = await axios.post('/api/v1/users/getUser',{owner})
-        // console.log(result)
-        const user = result.data.data
-        console.log('user',user)
-        setUserAvatar(user?.avatar)
-        setUserName(user?.fullName)
-    } catch (error) {
-        console.log(error)
-    }
+      const result = await fetchDataFromApi(`subscriptions/u/${owner}`)
+      // console.log("video owner",result?.[0])
+      setVideoOwner(result?.[0])
 }
 
   const fetchVideoDetails = () => {
@@ -91,19 +83,19 @@ const VideoDetails = () => {
                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
                   <img 
                     className='h-full w-full object-cover'
-                    src={userAvatar}
+                    src={videoOwner?.avatar}
                   />
                 </div>
               </div>
               <div className="flex flex-col ml-3">
                 <div className="text-white text-md font-semibold flex items-center">
-                  {userName}
+                  {videoOwner?.fullName}
                   {true && (
                       <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] ml-1" />
                     )}
                 </div>
                 <div className="text-white/[0.7] text-sm">
-                  {video?.author?.stats?.subscribersText}
+                  {videoOwner?.subscriber}
                 </div>
               </div>
             </div>
