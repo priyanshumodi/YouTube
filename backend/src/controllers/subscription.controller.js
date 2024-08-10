@@ -48,10 +48,6 @@ const getUserChannelSubscribers = asyncHandler(async(req,res)=> {
         throw new ApiError(400, "Invalid channel Id")
     }
 
-    const subscriber = await Subscription.find({
-        channel: channelId
-    })
-
     const subscribers = await User.aggregate([
       {
         $match: {
@@ -63,11 +59,15 @@ const getUserChannelSubscribers = asyncHandler(async(req,res)=> {
           from: 'subscriptions',
           localField: '_id',
           foreignField: 'channel',
-          as: "subscriber"
+          as: "subscribers"
         }
       },
       {
-        $unwind: '$subscriber'
+        $addFields: {
+          subscriber: {
+            $size:'$subscribers'
+          }
+        }
       },
       {
         $project: {
