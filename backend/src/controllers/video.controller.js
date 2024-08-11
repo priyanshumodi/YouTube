@@ -66,9 +66,10 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = "", sortBy = "createdAt", sortType = 1, userId = "" } = req.query
     //TODO: get all videos based on query, sort, pagination
     
+    // await is giving error check and learn
     var videoAggregate;
     try {
-        videoAggregate = await Video.aggregate(
+        videoAggregate = Video.aggregate(
             [
                 {
                     $match: {
