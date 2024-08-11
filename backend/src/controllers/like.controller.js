@@ -173,6 +173,26 @@ const getVideoLikes = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'Invalid Video Id')
     }
 
+    // const likes = await Like.aggregate([
+    //     {
+    //         $match: {
+    //             video: new mongoose.Types.ObjectId(videoId)
+    //         }
+    //     },
+    //     {
+    //         $addFields: {
+    //             isLiked: {
+    //                 $in: [req?.user?._id, '$likedBy']
+    //             }
+    //         }
+    //     },
+    //     {
+    //         $project: {
+    //             isLiked: 1
+    //         }
+    //     }
+    // ])
+
     const likes = await Like.aggregate([
         {
             $match: {
@@ -180,15 +200,35 @@ const getVideoLikes = asyncHandler(async (req, res) => {
             }
         },
         {
-            $count: "totalLikes"
+            $addFields: {
+                isLiked: {
+                    $eq: [req?.user?._id, '$likedBy'] // Use $eq instead of $in
+                }
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                totalLikes: { $sum: 1 },
+                isLiked: { $max: '$isLiked' } // Since isLiked is a boolean (either true or false), $max will return true if at least one document has isLiked set to true, otherwise it returns false.
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalLikes: 1,
+                isLiked: 1
+            }
         }
-    ])
+    ]);
+    
+    
 
     if(!likes) {
         throw new ApiError(500, 'something went wrong while fetching likes')
     }
 
-    console.log(likes)
+    // console.log(likes)
 
     return res
         .status(200)
@@ -217,7 +257,7 @@ const getCommentLikes = asyncHandler(async (req, res) => {
         throw new ApiError(500, 'something went wrong while fetching likes')
     }
 
-    console.log(likes)
+    // console.log(likes)
 
     return res
         .status(200)
@@ -246,7 +286,7 @@ const getTweetLikes = asyncHandler(async (req, res) => {
         throw new ApiError(500, 'something went wrong while fetching likes')
     }
 
-    console.log(likes)
+    // console.log(likes)
 
     return res
         .status(200)
