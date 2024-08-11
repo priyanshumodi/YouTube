@@ -166,9 +166,98 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, videos, "All liked video fetched successfully"))
 })
 
+const getVideoLikes = asyncHandler(async (req, res) => {
+    const {videoId} = req.params
+
+    if(!isValidObjectId(videoId)) {
+        throw new ApiError(404, 'Invalid Video Id')
+    }
+
+    const likes = await Like.aggregate([
+        {
+            $match: {
+                video: new mongoose.Types.ObjectId(videoId)
+            }
+        },
+        {
+            $count: "totalLikes"
+        }
+    ])
+
+    if(!likes) {
+        throw new ApiError(500, 'something went wrong while fetching likes')
+    }
+
+    console.log(likes)
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, likes, 'likes fetched successfully'))
+})
+
+const getCommentLikes = asyncHandler(async (req, res) => {
+    const {commentId} = req.params
+
+    if(!isValidObjectId(commentId)) {
+        throw new ApiError(404, 'Invalid Video Id')
+    }
+
+    const likes = await Like.aggregate([
+        {
+            $match: {
+                comment: new mongoose.Types.ObjectId(commentId)
+            }
+        },
+        {
+            $count: "totalLikes"
+        }
+    ])
+
+    if(!likes) {
+        throw new ApiError(500, 'something went wrong while fetching likes')
+    }
+
+    console.log(likes)
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, likes, 'likes fetched successfully'))
+})
+
+const getTweetLikes = asyncHandler(async (req, res) => {
+    const {tweetId} = req.params
+
+    if(!isValidObjectId(tweetId)) {
+        throw new ApiError(404, 'Invalid Video Id')
+    }
+
+    const likes = await Like.aggregate([
+        {
+            $match: {
+                tweet: new mongoose.Types.ObjectId(tweetId)
+            }
+        },
+        {
+            $count: "totalLikes"
+        }
+    ])
+
+    if(!likes) {
+        throw new ApiError(500, 'something went wrong while fetching likes')
+    }
+
+    console.log(likes)
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, likes, 'likes fetched successfully'))
+})
 export {
     toggleCommentLike,
     toggleTweetLike,
     toggleVideoLike,
-    getLikedVideos
+    getLikedVideos,
+    getVideoLikes,
+    getCommentLikes,
+    getTweetLikes
 }
