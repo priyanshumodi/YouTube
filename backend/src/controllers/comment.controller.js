@@ -44,8 +44,12 @@ const getVideoComments = asyncHandler(async (req, res) => {
                 comment: {
                     $mergeObjects: ["$$ROOT.allComments", { owner: { _id: {$arrayElemAt: ["$user._id", 0]}, username: {$arrayElemAt: ["$user.username", 0]}, avatar: {$arrayElemAt: ["$user.avatar", 0]} } }]
                 },
-                _id:0
+                _id:0,
+                isCurrentUserComment: { $eq: ["$allComments.owner", req?.user?._id]}
             }
+        },
+        {
+            $sort: {isCurrentUserComment: -1}
         }
     ])
 
