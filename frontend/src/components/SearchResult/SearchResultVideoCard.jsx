@@ -4,30 +4,10 @@ import { abbreviateNumber } from 'js-abbreviation-number'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 
 import VideoLength from "../shared/VideoLength"
-import axios from 'axios'
 import TimeAgo from '../shared/TimeAgo'
 
 const SearchResultVideoCard = ({video}) => {
     // console.log(video)
-    const [userName,setUserName] = useState('')
-    const [userAvatar, setUserAvatar] = useState('')
-
-    useEffect(() => {
-        fetchUserDetails(video?.owner)
-    }, [video])
-
-    const fetchUserDetails = async (id) => {
-        try {
-            const result = await axios.post('/api/v1/users/getUser',{id})
-            // console.log(result)
-            const user = result.data.data
-            // console.log('user',user)
-            setUserAvatar(user?.avatar)
-            setUserName(user?.fullName)
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
   return (
     <Link to={`/app/video/${video?._id}`}>
@@ -53,13 +33,13 @@ const SearchResultVideoCard = ({video}) => {
                         <div className="flex h-9 w-9 rounded-full overflow-hidden">
                             <img
                                 className="h-full w-full object-cover"
-                                src={userAvatar}
+                                src={video?.owner?.avatar}
                             />
                         </div>
                     </div>
                     <div className="flex flex-col">
                         <span className="text-sm font-semibold mt-2 text-white/[0.7] flex items-center">
-                            {userName}
+                            {video?.owner?.fullName}
                             {true && (
                                 <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                             )}

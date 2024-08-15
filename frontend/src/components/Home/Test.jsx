@@ -11,12 +11,26 @@ const Test = () => {
   const dispatch = useDispatch()
   const loading = useSelector(state => state.hookReducer.loading)
   const [videos, setVideos] = useState(null)
+  const [user, setUser] = useState({})
 
   useEffect(()=>{
-    fetchVideoUser();
+    fetchUserVideo();
   }, [])
 
-  const fetchVideoUser = async () => {
+  useEffect(()=>{
+    if(videos?.owner?._id) {
+      fetchUser(videos?.owner?._id)
+    }
+  }, [videos])
+
+  const fetchUser = async (owner) => {
+    console.log(owner)
+    const result = await fetchDataFromApi(`subscriptions/u/${owner}`)
+    console.log("video owner",result?.[0])
+    setUser(result?.[0])
+  }
+
+  const fetchUserVideo = async () => {
     dispatch(toggleLoading())
     const options = {
       params: {
@@ -28,7 +42,7 @@ const Test = () => {
     try {
       const response = await fetchDataFromApi(`/videos`,options)
       console.log(response);
-      setVideos(response?.docs);
+      setVideos(response?.videos);
       dispatch(toggleLoading())
     } catch (error) {
       dispatch(toggleLoading())
@@ -46,7 +60,13 @@ const Test = () => {
         <div className='flex flex-row h-[calc(100%-56px)] bg-black'>
             <LeftNav />
             <div className="grow w-[calc(100%-240px)] h-screen overflow-y-auto bg-black">
-                <div className="bg-background text-foreground p-4 mt-4">
+                <div className="bg-background text-foreground p-4">
+                    <div class="relative mb-2">
+                    <img class="w-full h-40 object-cover rounded-lg" src="https://placehold.co/1200x400.png?text=Cover+Image" alt="Cover Image" />
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <div class="bg-yellow-400 p-2 rounded-md text-black font-bold">Starting August 2024</div>
+                    </div>
+                    </div>
                     <div className="flex">
                         <div className="flex lg:h-[200px] lg:w-[200px] sm:h-[100px] sm:w-[100px] 
                         h-[100px] w-[100px] overflow-hidden rounded-full md:ml-4">

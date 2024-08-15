@@ -15,6 +15,10 @@ import Feed from './components/Home/Feed'
 import SearchResult from './components/SearchResult/SearchResult'
 import VideoDetails from './components/Video/VideoDetails'
 import Test from './components/Home/Test'
+import UserLayout from './components/Layout/UserLayout'
+import UserVideos from './components/userdetail/userNav/UserVideos'
+import UserLiked from './components/userdetail/userNav/UserLiked'
+import UserCommunity from './components/userdetail/userNav/UserCommunity'
 
 function App() {
   const dispatch = useDispatch()
@@ -43,12 +47,18 @@ function App() {
             <Route path='/healthcheck' element={<Healthcheck />} />
             <Route path='/' element={<LandingPage/>} />
             
-            <Route path='/user/detail' element={<UserDetail/>} />
 
             <Route path='/app' element={<PrivateRoutes><Layout /></PrivateRoutes>}>
                 <Route index exact element={<PrivateRoutes><Feed /></PrivateRoutes>} />
                 <Route path='searchResult/:searchQuery' element={<PrivateRoutes><SearchResult /></PrivateRoutes>}/>
                 <Route path='video/:id' element={<PrivateRoutes><VideoDetails /></PrivateRoutes>} />
+                <Route path='user/:id' element={<PrivateRoutes><UserLayout/></PrivateRoutes>}>
+                    <Route path='home' index element={<PrivateRoutes></PrivateRoutes>} />
+                    <Route path='videos' element={<PrivateRoutes><UserVideos/></PrivateRoutes>} />
+                    <Route path='liked' element={<PrivateRoutes><UserLiked /></PrivateRoutes>} />
+                    <Route path='playlist' element={<PrivateRoutes></PrivateRoutes>} />
+                    <Route path='community' element={<PrivateRoutes><UserCommunity /></PrivateRoutes>} />
+                </Route>
             </Route>
 
             <Route path='/test' element={<Test />} />

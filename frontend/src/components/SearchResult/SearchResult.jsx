@@ -30,8 +30,8 @@ const SearchResult = () => {
 
     try {
       const response = await fetchDataFromApi(`videos`,options)
-      // console.log(response);
-      setResult(response?.docs);
+      console.log(response);
+      setResult(response?.videos);
       dispatch(toggleLoading())
     } catch (error) {
       dispatch(toggleLoading())

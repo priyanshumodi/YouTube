@@ -102,7 +102,7 @@ const Comment = ({video}) => {
                 />
                 <div className='flex flex-col sm:flex-row'>
                     <button className="ml-2 text-white hover:text-muted px-4 py-2 rounded-3xl hover:bg-white/[0.20]">Cancel</button>
-                    <button className={`ml-4 ${isActiveComment ? "text-black bg-blue-500" : "bg-white/[0.15] text-zinc-400"} hover:bg-primary/80 px-4 py-2 rounded-3xl font-medium`} onClick={()=> (isActiveComment && handleSubmit())}>Comment</button>
+                    <button className={`ml-4 ${isActiveComment ? "text-black bg-customBlue" : "bg-white/[0.15] text-zinc-400"} hover:bg-primary/80 px-4 py-2 rounded-3xl font-medium`} onClick={()=> (isActiveComment && handleSubmit())}>Comment</button>
                 </div>
               </div>
               {/* <div className="flex justify-between items-center mt-4">

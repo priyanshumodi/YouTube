@@ -20,7 +20,7 @@ const Header = () => {
 
   const mobileMenu = useSelector(state => state.hookReducer.mobileMenu)
   const loading = useSelector(state => state.hookReducer.loading)
-  const avatar = useSelector(state => state.userReducer.user.avatar)
+  const user = useSelector(state => state.userReducer.user)
 
   const navigate = useNavigate();
 
@@ -98,10 +98,10 @@ const Header = () => {
                 </div>
             </div>
             <Link 
-            to='/test'
+            to={`user/${user?._id}`}
             className='flex h-8 w-8 overflow-hidden rounded-full md:ml-4'
             >
-                <img src={avatar} alt='profile' className='object-cover w-full h-full'/>
+                <img src={user?.avatar} alt='profile' className='object-cover w-full h-full'/>
             </Link>
         </div>
     </div>

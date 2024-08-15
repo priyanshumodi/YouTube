@@ -9,23 +9,6 @@ import axios from 'axios'
 
 const SuggestionVideoCard = ({video}) => {
 
-    const [userName,setUserName] = useState('')
-
-    useEffect(() => {
-        fetchUserDetails(video?.owner)
-    }, [video])
-
-    const fetchUserDetails = async (id) => {
-        try {
-            const result = await axios.post('/api/v1/users/getUser',{id})
-            // console.log(result)
-            const user = result.data.data
-            // console.log('user',user)
-            setUserName(user?.fullName)
-        } catch (error) {
-            console.log(error)
-        }
-    }
   return (
     <Link to={`/app/video/${video?._id}`}>
         <div className="flex mb-3">
@@ -43,7 +26,7 @@ const SuggestionVideoCard = ({video}) => {
                     {video?.title}
                 </span>
                 <span className="text-[12px] lg:text-[10px] xl:text-[12px] font-semibold mt-2 text-white/[0.7] flex items-center">
-                    {userName}
+                    {video?.owner?.fullName}
                     {true && (
                         <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                     )}

@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { AiOutlineLike } from 'react-icons/ai'
+import { AiFillLike } from "react-icons/ai";
 import { abbreviateNumber } from 'js-abbreviation-number'
 
 import {fetchDataFromApi} from "../utils/api"
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SuggestionVideoCard from "./SuggestionVideoCard"
 import { toggleLoading } from '../../features/hooks/hookSlice'
 import axios from 'axios'
@@ -19,14 +20,18 @@ const VideoDetails = () => {
 
   const [video, setVideo] = useState();
   const [relatedVideos, setRelatedVideos] = useState();
+  const [like, setLike] = useState(0)
   const { id } = useParams();
 
   const [videoOwner,setVideoOwner] = useState({})
+  const [liked, setLiked] = useState(false)
 
   useEffect(() => {
     document.getElementById("root").classList.add("custom-h");
+    if(id) {
     fetchVideoDetails();
-    fetchRelatedVideos();
+    fetchVideoLikes();
+    }
   }, [id])
 
   useEffect(() => {
@@ -35,28 +40,69 @@ const VideoDetails = () => {
 }, [video])
 
 
+  const fetchVideoLikes = async () => {
+    const result = await fetchDataFromApi(`likes/video/${id}`)
+    // console.log(result?.[0]?.totalLikes)
+    if(result?.[0]?.totalLikes) {
+    setLike(result?.[0]?.totalLikes)
+    setLiked(result?.[0]?.isLiked)
+    } else {
+      setLike(0);
+      setLike(false);
+    }
+  }
+
   const fetchVideoUser = async (owner) => {
       const result = await fetchDataFromApi(`subscriptions/u/${owner}`)
       // console.log("video owner",result?.[0])
       setVideoOwner(result?.[0])
-}
+  }
 
   const fetchVideoDetails = () => {
     dispatch(toggleLoading())
     fetchDataFromApi(`/videos/${id}`).then((res) => {
       // console.log("get video detail",res);
       setVideo(res);
-      dispatch(toggleLoading())
+      fetchRelatedVideos();
     })
+    dispatch(toggleLoading())
   }
 
-  const fetchRelatedVideos = () => {
+  const fetchRelatedVideos = async () => {
     dispatch(toggleLoading())
-    fetchDataFromApi(`/videos`).then((res) => {
-      // console.log("get related video ",res.docs);
-      setRelatedVideos(res.docs);
+    const options = {
+      params: {
+        query: video?.title, // Search keyword
+        page: 1,
+        limit: 10,
+      },
+    }
+
+    try {
+      const response = await fetchDataFromApi(`videos`,options)
+      console.log(response);
+      setRelatedVideos(response?.videos);
       dispatch(toggleLoading())
-    })
+    } catch (error) {
+      dispatch(toggleLoading())
+      console.log(error)
+    }
+  }
+
+  const handleToggleLike = async () => {
+    try {
+      const result = await axios.post(`/api/v1/likes/toggle/v/${id}`)
+      // console.log(result)
+      if(result?.data?.data?.acknowledged) {
+        setLike(like-1)
+        setLiked(false)
+      } else {
+        setLike(like+1)
+        setLiked(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
   return (
     <div className="flex justify-center flex-row h-auto bg-black">
@@ -101,9 +147,15 @@ const VideoDetails = () => {
             </div>
             <div className="flex text-white mt-4 md:mt-0">
               <div className="flex items-center justify-center h-11 px-6 rounded-3xl bg-white/[0.15]">
-                <AiOutlineLike className="text-xl text-white mr-2" />
+              <button onClick={handleToggleLike} className="transition-colors duration-300 ease-in-out">
+                  {liked ? 
+                    <AiFillLike className="text-xl text-white mr-2" /> : 
+                    <AiOutlineLike className="text-xl text-white mr-2" />
+                  }
+              </button>
+                
                 {`${abbreviateNumber(
-                  video?.stats?.views,
+                  like,
                   2
                 )} Likes`}
               </div>
