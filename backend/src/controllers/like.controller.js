@@ -151,7 +151,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         {
           $lookup: {
             from: "users",
-            localField: "likedBy",
+            localField: "videos.owner",
             foreignField: "_id",
             as: "owner"
           }
@@ -266,7 +266,25 @@ const getCommentLikes = asyncHandler(async (req, res) => {
             }
         },
         {
-            $count: "totalLikes"
+            $addFields: {
+                isLiked: {
+                    $eq: [req?.user?._id,'$likedBy']
+                }
+            }
+        },
+        {
+            $group: {
+                _id:null,
+                totalLikes: {$sum: 1},
+                isLiked: {$max: '$isLiked'}
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalLikes: 1,
+                isLiked: 1
+            }
         }
     ])
 
@@ -295,7 +313,25 @@ const getTweetLikes = asyncHandler(async (req, res) => {
             }
         },
         {
-            $count: "totalLikes"
+            $addFields: {
+                isLiked: {
+                    $eq: [req?.user?._id, '$likedBy']
+                }
+            }
+        },
+        {
+            $group: {
+                _id: null,
+                totalLikes: {$sum: 1},
+                isLiked: {$max: '$isLiked'}
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalLikes: 1,
+                isLiked: 1
+            }
         }
     ])
 
