@@ -1,13 +1,23 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import LeftNav from "../LeftNav/LeftNav"
 import VideoCard from "./VideoCard"
 import { useSelector } from 'react-redux'
+import { fetchDataFromApi } from '../utils/api'
 
 const Feed = () => {
 
   const loading = useSelector(state => state.hookReducer.loading)
-  const searchResults = useSelector(state => state.hookReducer.searchResults)
+  const [searchResults, setSearchResults] = useState([])
+  useEffect(() => {
+    fetchFeedVideos()
+  }, [])
+
+  const fetchFeedVideos = async () => {
+    const response = await fetchDataFromApi(`videos`,{params: {query: 'a'}})
+    console.log(response.videos)
+    setSearchResults(response.videos)
+  }
 
   useEffect(() => {
     document.getElementById("root").classList.remove("custom-h");
@@ -18,13 +28,12 @@ const Feed = () => {
         <LeftNav />
         <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-black">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
-                {!loading &&
+                {!loading && searchResults.length > 0 &&
                     searchResults.map((item) => {
-                        if (item.type !== "video") return false;
                         return (
                             <VideoCard
-                                key={item?.video?._id}
-                                video={item?.video}
+                                key={item?._id}
+                                video={item}
                             />
                         );
                     })}

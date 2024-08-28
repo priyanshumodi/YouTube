@@ -1,9 +1,10 @@
 import React,{ useState, useEffect} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams,Link } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { AiOutlineLike } from 'react-icons/ai'
 import { AiFillLike } from "react-icons/ai";
+import { FaRegBell } from "react-icons/fa";
 import { abbreviateNumber } from 'js-abbreviation-number'
 
 import {fetchDataFromApi} from "../utils/api"
@@ -22,6 +23,7 @@ const VideoDetails = () => {
   const [relatedVideos, setRelatedVideos] = useState();
   const [like, setLike] = useState(0)
   const { id } = useParams();
+  const [subscribe, setSubscribe] = useState(false)
 
   const [videoOwner,setVideoOwner] = useState({})
   const [liked, setLiked] = useState(false)
@@ -56,6 +58,11 @@ const VideoDetails = () => {
       const result = await fetchDataFromApi(`subscriptions/u/${owner}`)
       // console.log("video owner",result?.[0])
       setVideoOwner(result?.[0])
+      if(result?.[0]?.isSubscribed) {
+        setSubscribe(true)
+      } else {
+        setSubscribe(false)
+      }
   }
 
   const fetchVideoDetails = () => {
@@ -104,6 +111,18 @@ const VideoDetails = () => {
       console.log(error)
     }
   }
+
+  const handleToggleSubscribe = async() => {
+    const response = await axios.post(`/api/v1/subscriptions/c/${videoOwner?._id}`)
+    // console.log(response)
+    if(response?.data?.data?.acknowledged) {
+      setSubscribe(false);
+      fetchVideoUser(video?.owner)
+    } else {
+      setSubscribe(true);
+      fetchVideoUser(video?.owner)
+    }
+  }
   return (
     <div className="flex justify-center flex-row h-auto bg-black">
       <div className="w-full max-w-[1280px] flex flex-col lg:flex-row h-auto">
@@ -124,7 +143,8 @@ const VideoDetails = () => {
             {video?.title}
           </div>
           <div className="flex justify-between flex-col md:flex-row mt-4">
-            <div className="flex">
+            <div className="flex space-x-2">
+              <Link to={``} className='flex'>
               <div className="flex items-start">
                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
                   <img 
@@ -143,6 +163,18 @@ const VideoDetails = () => {
                 <div className="text-white/[0.7] text-sm">
                   {videoOwner?.subscriber}
                 </div>
+              </div>
+              </Link>
+              <div className={`flex items-center justify-center h-10 px-5 rounded-3xl ${subscribe ? "bg-white/[0.15]" : "bg-white"} `}>
+                { !subscribe ?
+                  <button onClick={handleToggleSubscribe} className="transition-colors duration-300 ease-in-out">
+                      Subscribe
+                  </button> :
+                  <button onClick={handleToggleSubscribe} className="flex items-center space-x-1 transition-colors duration-300 ease-in-out text-white">
+                      <FaRegBell />
+                      <span>Subscribed</span>
+                  </button>
+                }
               </div>
             </div>
             <div className="flex text-white mt-4 md:mt-0">

@@ -90,9 +90,12 @@ const Header = () => {
         </div>
         <div className="flex items-center">
             <div className="hidden md:flex">
-                <div className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-[#303030]/[0.6]">
+                <Link
+                to={'video/upload'}
+                className="flex items-center justify-center h-10 w-10 rounded-full hover:bg-[#303030]/[0.6]"
+                >
                     <RiVideoAddLine className="text-white text-xl cursor-pointer" />
-                </div>
+                </Link>
                 <div className="flex items-center justify-center ml-2 h-10 w-10 rounded-full hover:bg-[#303030]/[0.6]">
                     <FiBell className="text-white text-xl cursor-pointer" />
                 </div>

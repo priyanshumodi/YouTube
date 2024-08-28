@@ -19,6 +19,7 @@ import UserLayout from './components/Layout/UserLayout'
 import UserVideos from './components/userdetail/userNav/UserVideos'
 import UserLiked from './components/userdetail/userNav/UserLiked'
 import UserCommunity from './components/userdetail/userNav/UserCommunity'
+import UploadVideo from './components/Video/UploadVideo'
 
 function App() {
   const dispatch = useDispatch()
@@ -52,6 +53,7 @@ function App() {
                 <Route index exact element={<PrivateRoutes><Feed /></PrivateRoutes>} />
                 <Route path='searchResult/:searchQuery' element={<PrivateRoutes><SearchResult /></PrivateRoutes>}/>
                 <Route path='video/:id' element={<PrivateRoutes><VideoDetails /></PrivateRoutes>} />
+                <Route path='video/upload' element={<PrivateRoutes><UploadVideo /></PrivateRoutes>} />
                 <Route path='user/:id' element={<PrivateRoutes><UserLayout/></PrivateRoutes>}>
                     <Route path='home' index element={<PrivateRoutes></PrivateRoutes>} />
                     <Route path='videos' element={<PrivateRoutes><UserVideos/></PrivateRoutes>} />

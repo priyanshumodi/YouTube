@@ -34,7 +34,7 @@ const UserDetail = () => {
     <div>
         <div className='flex flex-row h-[calc(100%-56px)] bg-black'>
             <LeftNav />
-            <div className="grow w-[calc(100%-240px)] h-screen overflow-y-auto bg-black">
+            <div className="grow w-[calc(100%-240px)] h-[700px] overflow-y-auto bg-black">
                 <div className="bg-background text-foreground p-4">
                     {user?.coverImage && 
                     <div className="relative mb-2">

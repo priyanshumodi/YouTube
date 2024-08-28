@@ -11,6 +11,8 @@ import { FaRegEdit } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import UpdateComment from './UpdateComment';
 import { addUpdateComment } from '../../features/hooks/hookSlice';
+import { Link } from 'react-router-dom';
+
 const Comment = ({video}) => {
     const dispatch = useDispatch()
   
@@ -119,13 +121,16 @@ const Comment = ({video}) => {
                 {(item?.comment?._id !== updateComment) ?
                 (
                   <div className="flex items-start mb-4">
+                      <Link to={``}>
                       <img src={item?.comment?.owner?.avatar} className="w-10 h-10 rounded-full mr-4 object-cover" />
+                      </Link>
                       <div className="flex-1 text-white">
                         <div className='flex justify-between'>
                           <p className="font-semibold text-foreground">
                               @{item?.comment?.owner?.username} <span className="text-muted text-zinc-500 text-sm">{<TimeAgo timestamp={item?.comment?.createdAt} />}</span>
                           </p>
                       <div className='flex items-center'>
+                        {/* user owner feature edit and delete */}
                             {user?._id === item?.comment?.owner?._id && (
                             <>
                             <button onClick={() => handleUpdateComment(item?.comment?._id)} className='hover:bg-white/[0.20] p-2 rounded-full'>

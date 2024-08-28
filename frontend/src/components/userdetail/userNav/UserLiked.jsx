@@ -15,7 +15,7 @@ const UserLiked = () => {
   const fetchLikedVideos = async() => {
     dispatch(toggleLoading())
     const result = await fetchDataFromApi('likes/videos')
-    // console.log(result)
+    console.log(result)
     setLikedVideos(result)
     dispatch(toggleLoading())
   }
