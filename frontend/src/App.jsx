@@ -20,6 +20,8 @@ import UserVideos from './components/userdetail/userNav/UserVideos'
 import UserLiked from './components/userdetail/userNav/UserLiked'
 import UserCommunity from './components/userdetail/userNav/UserCommunity'
 import UploadVideo from './components/Video/UploadVideo'
+import UserPlaylist from './components/userdetail/userNav/UserPlaylist'
+import Playlist from './components/playlist/Playlist'
 
 function App() {
   const dispatch = useDispatch()
@@ -58,9 +60,10 @@ function App() {
                     <Route path='home' index element={<PrivateRoutes></PrivateRoutes>} />
                     <Route path='videos' element={<PrivateRoutes><UserVideos/></PrivateRoutes>} />
                     <Route path='liked' element={<PrivateRoutes><UserLiked /></PrivateRoutes>} />
-                    <Route path='playlist' element={<PrivateRoutes></PrivateRoutes>} />
+                    <Route path='playlist' element={<PrivateRoutes><UserPlaylist /></PrivateRoutes>} />
                     <Route path='community' element={<PrivateRoutes><UserCommunity /></PrivateRoutes>} />
                 </Route>
+                <Route path='playlist/:id' element={<PrivateRoutes><Playlist /></PrivateRoutes>}/>
             </Route>
 
             <Route path='/test' element={<Test />} />

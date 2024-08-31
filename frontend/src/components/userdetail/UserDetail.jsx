@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Header from '../Header/Header'
 import LeftNav from '../LeftNav/LeftNav'
 import { useDispatch } from 'react-redux'
 import { toggleLoading } from '../../features/hooks/hookSlice'

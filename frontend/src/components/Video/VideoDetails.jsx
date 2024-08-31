@@ -38,7 +38,7 @@ const VideoDetails = () => {
 
   useEffect(() => {
     // console.log(video?.owner)
-    fetchVideoUser(video?.owner)
+    fetchVideoUser(video?.owner?._id)
 }, [video])
 
 
@@ -56,7 +56,7 @@ const VideoDetails = () => {
 
   const fetchVideoUser = async (owner) => {
       const result = await fetchDataFromApi(`subscriptions/u/${owner}`)
-      // console.log("video owner",result?.[0])
+      console.log("video owner",result?.[0])
       setVideoOwner(result?.[0])
       if(result?.[0]?.isSubscribed) {
         setSubscribe(true)
@@ -67,9 +67,9 @@ const VideoDetails = () => {
 
   const fetchVideoDetails = () => {
     dispatch(toggleLoading())
-    fetchDataFromApi(`/videos/${id}`).then((res) => {
-      // console.log("get video detail",res);
-      setVideo(res);
+    fetchDataFromApi(`videos/${id}`).then((res) => {
+      console.log("get video detail",res);
+      setVideo(res?.[0]);
       fetchRelatedVideos();
     })
     dispatch(toggleLoading())
@@ -113,14 +113,14 @@ const VideoDetails = () => {
   }
 
   const handleToggleSubscribe = async() => {
-    const response = await axios.post(`/api/v1/subscriptions/c/${videoOwner?._id}`)
+    const response = await axios.post(`/api/v1/subscriptions/c/${video?.owner?._id}`)
     // console.log(response)
     if(response?.data?.data?.acknowledged) {
       setSubscribe(false);
-      fetchVideoUser(video?.owner)
+      fetchVideoUser(video?.owner?._id)
     } else {
       setSubscribe(true);
-      fetchVideoUser(video?.owner)
+      fetchVideoUser(video?.owner?._id)
     }
   }
   return (
@@ -149,13 +149,13 @@ const VideoDetails = () => {
                 <div className="flex h-11 w-11 rounded-full overflow-hidden">
                   <img 
                     className='h-full w-full object-cover'
-                    src={videoOwner?.avatar}
+                    src={video?.owner?.avatar}
                   />
                 </div>
               </div>
               <div className="flex flex-col ml-3">
                 <div className="text-white text-md font-semibold flex items-center">
-                  {videoOwner?.fullName}
+                  {video?.owner?.fullName}
                   {true && (
                       <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] ml-1" />
                     )}
