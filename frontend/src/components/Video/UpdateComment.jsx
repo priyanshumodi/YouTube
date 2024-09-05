@@ -40,7 +40,7 @@ const UpdateComment = ({comment}) => {
         }
       }, [newComment])
   return (
-              <div className="flex items-center mt-4">
+              <div className="flex items-center mt-4 mb-4">
                 <img src="http://res.cloudinary.com/priyanshu7/image/upload/v1720862753/zl04rns9qldmgod53acf.jpg" alt="User Avatar" className="w-10 h-10 rounded-full mr-4 object-cover" />
                 <input
                   type="text"

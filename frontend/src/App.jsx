@@ -22,6 +22,7 @@ import UserCommunity from './components/userdetail/userNav/UserCommunity'
 import UploadVideo from './components/Video/UploadVideo'
 import UserPlaylist from './components/userdetail/userNav/UserPlaylist'
 import Playlist from './components/playlist/Playlist'
+import UpdateAvatar from './components/userdetail/UpdateAvatar'
 
 function App() {
   const dispatch = useDispatch()
@@ -64,6 +65,7 @@ function App() {
                     <Route path='community' element={<PrivateRoutes><UserCommunity /></PrivateRoutes>} />
                 </Route>
                 <Route path='playlist/:id' element={<PrivateRoutes><Playlist /></PrivateRoutes>}/>
+                <Route path='avatar' element={<PrivateRoutes><UpdateAvatar /></PrivateRoutes>} />
             </Route>
 
             <Route path='/test' element={<Test />} />
