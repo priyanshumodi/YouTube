@@ -55,18 +55,20 @@ const UserDetail = () => {
             <div className="grow w-[calc(100%-240px)] h-[700px] overflow-y-auto bg-black">
                 <div className="bg-background text-foreground p-4">
                     {user?.coverImage && 
-                    <div className="relative mb-2">
+                    <Link 
+                    to={'/app/coverImage'}
+                    className="relative mb-2">
                     <img className="w-full h-40 object-cover rounded-lg" src={user?.coverImage} alt="Cover Image" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-black font-bold">{user?.fullName}</div>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+                      <div className="text-black font-bold text-2xl"><CiCamera /></div>
                     </div>
-                    </div>
+                    </Link>
                     }
                     <div className="flex">
                         <Link 
                         to={'/app/avatar'}
                         className="flex lg:h-[200px] lg:w-[200px] sm:h-[100px] sm:w-[100px] 
-                        h-[100px] w-[100px] overflow-hidden rounded-full md:ml-4 relative">
+                        h-[100px] w-[100px] overflow-hidden rounded-full md:ml-4 relative mt-5">
                             <img className="object-cover w-full h-full transition-filter duration-300 hover:filter hover:blur-sm hover:saturate-100 hover:brightness-90" src={user?.avatar} alt="Profile Image" />
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
                                 <div className="text-black font-bold text-2xl"><CiCamera /></div>
@@ -78,8 +80,8 @@ const UserDetail = () => {
                           <p className="text-zinc-400">@{user?.username} . {user?.subscriber} subscribers . 3 videos</p>
 
                           <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                            <button className="bg-white/[0.15] text-white hover:bg-white/[0.20] px-4 py-2 rounded-3xl font-medium">Customise channel</button>
-                            <button className="bg-white/[0.15] text-white hover:bg-white/[0.20] px-4 py-2 rounded-3xl ml-2 font-medium">Manage videos</button>
+                            <Link to={'/app/customize'} className="bg-white/[0.15] text-white hover:bg-white/[0.20] px-4 py-2 rounded-3xl font-medium">Customise channel</Link>
+                            <Link to={'/app/password'} className="bg-white/[0.15] text-white hover:bg-white/[0.20] px-4 py-2 rounded-3xl ml-2 font-medium">change password</Link>
                             <button onClick={handleLogOut} className="bg-white/[0.15] text-white hover:bg-white/[0.20] px-4 py-2 rounded-3xl ml-2 font-medium">LogOut</button>
                           </div>
                         </div>                
