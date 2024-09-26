@@ -1,26 +1,48 @@
 import React,{useState, useEffect} from 'react'
 import { abbreviateNumber } from 'js-abbreviation-number'
 import { BsFillCheckCircleFill } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import VideoLength from '../shared/VideoLength'
 import TimeAgo from '../shared/TimeAgo'
 import { fetchDataFromApi } from '../utils/api'
+import { useDispatch } from 'react-redux'
+import { toggleLoading } from '../../features/hooks/hookSlice'
+import { MdDelete } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import axios from 'axios'
 
-const PlaylistVideo = ({id}) => {
+const PlaylistVideo = ({id, playlist}) => {
     const [video, setVideo] = useState({})
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     useEffect(() => {
         // console.log(id)
         fetchVideoById()
     }, [])
 
     const fetchVideoById = async() => {
+        dispatch(toggleLoading())
         const result = await fetchDataFromApi(`videos/${id}`);
         // console.log("video", result?.[0])
         setVideo(result?.[0])
+        dispatch(toggleLoading())
+    }
+    const handleDeleteVideo = async () => {
+        try {
+            dispatch(toggleLoading());
+            const response = await axios.patch(`/api/v1/playlist/remove/${id}/${playlist}`)
+            console.log(response)
+            navigate(`/app/playlist/${playlist}`)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            dispatch(toggleLoading());
+        }
     }
   return (
-        <Link to={`/app/video/${id}`}>
+    <div className='flex'>
+        <Link to={`/app/video/${id}`} className='flex justify-between'>
             <div className="flex mb-3">
                     <div className="relative h-24 lg:h-20 xl:h-24 w-40 min-w-[168px] lg:w-32 lg:min-w-[128px] xl:w-40 xl:min-w-[168px] rounded-xl bg-slate-800 overflow-hidden">
                         <img
@@ -56,6 +78,12 @@ const PlaylistVideo = ({id}) => {
                     </div>
             </div>
         </Link>
+        <div>
+        <button onClick={handleDeleteVideo} className='hover:bg-white/[0.20]  h-8 w-8 p-2  rounded-full text-white'>
+            <MdDelete />
+        </button>
+        </div>
+    </div>
   )
 }
 

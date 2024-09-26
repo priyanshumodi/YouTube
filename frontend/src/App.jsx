@@ -26,6 +26,9 @@ import UpdateAvatar from './components/userdetail/UpdateAvatar'
 import UpdateCoverImage from './components/userdetail/UpdateCoverImage'
 import UpdateUser from './components/userdetail/UpdateUser'
 import ChangePassword from './components/userdetail/ChangePassword'
+import UpdatePlaylist from './components/playlist/UpdatePlaylist'
+import AddVideo from './components/playlist/AddVideo'
+import CreatePlaylist from './components/playlist/CreatePlaylist'
 
 function App() {
   const dispatch = useDispatch()
@@ -72,6 +75,9 @@ function App() {
                 <Route path='coverImage' element={<PrivateRoutes><UpdateCoverImage /></PrivateRoutes>} />
                 <Route path='customize' element={<PrivateRoutes><UpdateUser /></PrivateRoutes>} />
                 <Route path='password' element={<PrivateRoutes><ChangePassword /></PrivateRoutes>} />
+                <Route path='playlist-update/:id' element={<PrivateRoutes><UpdatePlaylist /></PrivateRoutes>} />
+                <Route path='playlist-add/:videoId' element={<PrivateRoutes><AddVideo /></PrivateRoutes>} />
+                <Route path='playlist-create' element={<PrivateRoutes><CreatePlaylist /></PrivateRoutes>} />
             </Route>
 
             <Route path='/test' element={<Test />} />

@@ -6,6 +6,7 @@ import { AiOutlineLike } from 'react-icons/ai'
 import { AiFillLike } from "react-icons/ai";
 import { FaRegBell } from "react-icons/fa";
 import { abbreviateNumber } from 'js-abbreviation-number'
+import { MdOutlineSaveAlt } from "react-icons/md";
 
 import {fetchDataFromApi} from "../utils/api"
 import { useDispatch, useSelector } from 'react-redux'
@@ -176,6 +177,12 @@ const VideoDetails = () => {
                   </button>
                 }
               </div>
+              <div className={`flex items-center justify-center h-10 px-5 rounded-3xl bg-white/[0.15]`}>
+                  <Link to={`/app/playlist-add/${id}`} className="flex items-center space-x-1 transition-colors duration-300 ease-in-out text-white">
+                      <MdOutlineSaveAlt />
+                      <span>Save</span>
+                  </Link>
+              </div>
             </div>
             <div className="flex text-white mt-4 md:mt-0">
               <div className="flex items-center justify-center h-11 px-6 rounded-3xl bg-white/[0.15]">
@@ -218,6 +225,7 @@ const VideoDetails = () => {
           })}
         </div>
       </div>
+      
     </div>
   )
 }
